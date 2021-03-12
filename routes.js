@@ -4,12 +4,12 @@ import {
   CardStyleInterpolators,
 } from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
-import Navigator from './CeComp/RefNavigation';
-import CeHome from './CeSrc/CeHome';
-import CeSP from './CeSrc/CeSP';
-import CeCart from './CeSrc/CeCart';
-import CeContact from './CeSrc/CeContact';
-import CeSearch from './CeSrc/CeSearch';
+import Navigator from './MtComp/RefNavigation';
+import MtHome from './MtSrc/MtHome';
+// import MtSP from './MtSrc/MtSP';
+// import MtCart from './MtSrc/MtCart';
+// import MtContact from './MtSrc/MtContact';
+// import MtSearch from './MtSrc/MtSearch';
 const Stack = createStackNavigator();
 
 function Routes(props) {
@@ -19,16 +19,16 @@ function Routes(props) {
         Navigator.InitializeRefNavigation(ref);
       }}>
       <Stack.Navigator
-        initialRouteName="CeHome"
+        initialRouteName="MtHome"
         screenOptions={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}>
-        <Stack.Screen name="CeHome" component={CeHome} />
-        <Stack.Screen name="CeSP" component={CeSP} />
-        <Stack.Screen name="CeCart" component={CeCart} />
-        <Stack.Screen name="CeSearch" component={CeSearch} />
-        <Stack.Screen name="CeContact" component={CeContact} />
+        <Stack.Screen name="MtHome" component={MtHome} />
+        {/* <Stack.Screen name="MtSP" component={MtSP} />
+        <Stack.Screen name="MtCart" component={MtCart} />
+        <Stack.Screen name="MtSearch" component={MtSearch} />
+        <Stack.Screen name="MtContact" component={MtContact} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
