@@ -11,7 +11,7 @@ import {
 import WrapperScreen from '../MtComp/WrapperScreen';
 import {colors} from '../MtComp/MtColor';
 import {H_W} from '../MtComp/MtDim';
-import Data from '../MtData';
+import Data from '../MTData';
 import Loop from '../MtComp/MtFlatList';
 import RefNavigation from '../MtComp/RefNavigation';
 import {connect} from 'react-redux';
@@ -28,310 +28,224 @@ import {Button} from 'react-native-elements';
 
 function MtHome(props) {
   useEffect(() => {
-    fill_Popular_Arrival();
+    changeTab(Data.catagory[0]);
   }, []);
   const insets = useSafeAreaInsets();
   const HEIGHT = H_W.height - (insets.bottom + insets.top);
-  const [mostPopular, setMostPopular] = useState([]);
-  const [newArrival, setNewArrival] = useState([]);
-
-  const fill_Popular_Arrival = () => {
-    let popularLamps = [];
-    let newArrivals = [];
-    let len = Data.product.length;
-    for (let ce = 0; ce < 10; ce++) {
-      popularLamps.push(Data.product[ce]);
-    }
-    for (let x = 0; x < 10; x++) {
-      newArrivals.push(Data.product[len - 1]);
-      len--;
-    }
-    setMostPopular(popularLamps);
-    setNewArrival(newArrivals);
+  const [categories, setCategories] = useState(Data.catagory);
+  const [currentCat, setCurrentCat] = useState(Data.catagory[0]);
+  const [tabProducts, setTabProducts] = useState([]);
+  // const [mostPopular, setMostPopular] = useState([]);
+  // const [newArrival, setNewArrival] = useState([]);
+  const changeTab = (tab) => {
+    setCurrentCat(tab);
+    const filteredProducts = Data.products.filter(
+      (item) => item.catagoryId === tab.id,
+    );
+    setTabProducts(filteredProducts);
   };
 
-  const MtGotoCart = () => RefNavigation.NavigateAndReset('MtCart');
-  const MtGotoSearch = () => RefNavigation.Navigate('MtSearch');
-  const MtGoToSingleProduct = (item) => {
-    props.MtsetCurrentProductAction(item);
-    RefNavigation.NavigateAndReset('MtSP');
-  };
+  // const MtGotoCart = () => RefNavigation.NavigateAndReset('MtCart');
+  // const MtGotoSearch = () => RefNavigation.Navigate('MtSearch');
+  // const MtGoToSingleProduct = (item) => {
+  //   props.MtsetCurrentProductAction(item);
+  //   RefNavigation.NavigateAndReset('MtSP');
+  // };
   return (
     <WrapperScreen style={{backgroundColor: 'white'}}>
-      <View style={{flex: 1}}>
-        <ScrollView bounces={false} style={{flex: 1}}>
-          <MyHeader
-            leftIcon={Feather}
-            leftIconName="shopping-bag"
-            leftIconColor="black"
-            leftIconAction={MtGotoCart}
-            rightIconAction={MtGotoSearch}
-            rightIcon={Feather}
-            rightIconColor="black"
-            rightIconName="search"
-            Title={
-              <Ionicons
-                color={'black'}
-                size={H_W.width * 0.09}
-                name="ios-ice-cream-outline"
+      <ScrollView>
+        <View>
+          <Loop
+            data={categories}
+            renderItem={({item}) => (
+              <TabList
+                item={item}
+                currentCat={currentCat}
+                changeTab={changeTab}
               />
-            }
-            rightIconStyle={styles.MtHome_CE1}
-          />
-          <View style={{marginTop: HEIGHT * 0.02}}>
-            <View style={styles.MtHome_CE2}>
-              <View style={styles.MtHome_CE3}>
-                <Text style={styles.MtHome_CE4}>Top Flavours</Text>
-              </View>
-              <TouchableOpacity onPress={MtGotoSearch}>
-                <Text style={styles.MtHome_CE5}>View all</Text>
-              </TouchableOpacity>
-            </View>
-            <Loop
-              data={mostPopular}
-              renderItem={({item}) => (
-                <HorizontalList
-                  item={item}
-                  MtGoToSingleProduct={MtGoToSingleProduct}
-                />
-              )}
-            />
-          </View>
-          <View>
-            <View style={styles.MtHome_CE6}>
-              <View style={styles.MtHome_CE7}>
-                <Text style={styles.MtHome_CE8}>New Flavours</Text>
-              </View>
-              <TouchableOpacity onPress={MtGotoSearch}>
-                <Text style={styles.MtHome_CE9}>View all</Text>
-              </TouchableOpacity>
-            </View>
-            <Loop
-              data={newArrival}
-              renderItem={({item}) => (
-                <HorizontalList
-                  item={item}
-                  MtGoToSingleProduct={MtGoToSingleProduct}
-                />
-              )}
-            />
-          </View>
-        </ScrollView>
-        <View
-          style={{
-            ...styles.MtHome_CE10,
-            marginBottom: -insets.bottom,
-            height: HEIGHT * 0.2,
-          }}>
-          <View>
-            <Text style={styles.MtHome_CE11}>Total: ${props.MtTotal}</Text>
-            <Button
-              onPress={MtGotoCart}
-              title="Order Now"
-              raised
-              titleStyle={styles.MtHome_CE12}
-              buttonStyle={styles.MtHome_CE13}
-              containerStyle={{marginTop: 8, width: '40%'}}
-            />
-          </View>
-          <ImageBackground
-            source={require('../MtAssets/ice22.png')}
-            style={{
-              ...styles.MtHome_CE14,
-              height: HEIGHT * 0.3,
-              top: -HEIGHT * 0.05,
-            }}
-            resizeMode="contain"
+            )}
           />
         </View>
-      </View>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View
+            style={{
+              height: H_W.width * 0.6,
+              width: H_W.width * 0.16,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              borderTopRightRadius: 15,
+              borderBottomRightRadius: 15,
+              backgroundColor: colors.primary,
+            }}>
+            <View
+              style={{
+                transform: [{rotate: '270deg'}],
+                alignSelf: 'stretch',
+                width: H_W.width * 0.52,
+                // height: HEIGHT * 0.25,
+              }}>
+              <Text
+                style={{
+                  fontSize: 24,
+                  fontWeight: 'bold',
+                  height: H_W.width * 0.2,
+                  textAlign: 'center',
+                  textAlignVertical: 'center',
+                  color: 'white',
+                  // width: H_W.width * 0.25,
+                }}>
+                {currentCat.CatagoryName}
+              </Text>
+            </View>
+          </View>
+          <Loop
+            data={tabProducts}
+            renderItem={({item}) => <ProductList item={item} />}
+          />
+        </View>
+      </ScrollView>
     </WrapperScreen>
   );
 }
 
-export const HorizontalList = ({item, MtGoToSingleProduct, cart}) => {
+export const ProductList = ({item}) => {
   const insets = useSafeAreaInsets();
   const HEIGHT = H_W.height - (insets.bottom + insets.top);
   return (
-    <View
+    <TouchableOpacity
       style={{
         backgroundColor: 'white',
-        margin: cart ? 0 : 20,
+        elevation: 5,
+        borderRadius: 20,
+        marginHorizontal: H_W.width * 0.03,
       }}>
-      <TouchableOpacity
-        onPress={() => MtGoToSingleProduct(item)}
-        style={styles.MtHome_CE16}>
-        <View style={{...styles.MtHome_CE17, paddingBottom: HEIGHT * 0.02}}>
-          <ImageBackground
-            source={item.images}
-            style={{...styles.MtHome_CE18, height: HEIGHT * 0.13}}
-            resizeMode="contain"
-          />
-          <View>
-            <Text style={styles.MtHome_CE19}>{item.names}</Text>
-          </View>
-          {cart && (
-            <Text style={{color: colors.darkGray, fontWeight: 'bold'}}>
-              {item.flavor.topping}
-            </Text>
-          )}
-          <View style={styles.MtHome_CE20}>
-            <Text style={styles.MtHome_CE21}>${item.price}</Text>
-          </View>
+      <View
+        style={{
+          flex: 1,
+          width: H_W.width * 0.6,
+          backgroundColor: 'white',
+          padding: H_W.width * 0.03,
+          alignItems: 'center',
+          borderRadius: 20,
+          justifyContent: 'flex-start',
+        }}>
+        <ImageBackground
+          source={item.images}
+          style={{width: '100%', height: HEIGHT * 0.3}}
+          resizeMode="contain"
+        />
+        <Text
+          style={{
+            fontWeight: 'bold',
+            fontSize: 22,
+            color: colors.primary,
+            alignSelf: 'flex-start',
+          }}>
+          {item.productName}
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: '100%',
+            justifyContent: 'space-between',
+            marginTop: HEIGHT * 0.002,
+          }}>
+          <Text
+            style={{
+              fontSize: 15,
+              color: colors.lightGrey3,
+              fontWeight: 'bold',
+            }}>
+            {item.catagoryName}
+          </Text>
+          <Text
+            style={{
+              fontSize: 15,
+              color: colors.lightGrey3,
+              fontWeight: 'bold',
+            }}>
+            {item.price}
+          </Text>
         </View>
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+export const TabList = ({item, changeTab, currentCat}) => {
+  const insets = useSafeAreaInsets();
+  const HEIGHT = H_W.height - (insets.bottom + insets.top);
+  return (
+    <TouchableOpacity
+      style={{
+        backgroundColor: 'white',
+        elevation: 3,
+        borderRadius: 20,
+        marginHorizontal: H_W.width * 0.03,
+      }}
+      onPress={() => changeTab(item)}>
+      <View
+        style={{
+          width: H_W.width * 0.3,
+          backgroundColor:
+            item.CatagoryName === currentCat.CatagoryName
+              ? `rgba(${colors.rgb_Primary},0.7)`
+              : 'white',
+          height: HEIGHT * 0.2,
+          padding: H_W.width * 0.03,
+          alignItems: 'center',
+          borderRadius: 20,
+          justifyContent: 'space-between',
+        }}>
+        <ImageBackground
+          source={
+            item.CatagoryName === currentCat.CatagoryName
+              ? item.iconw
+              : item.icon
+          }
+          style={{width: '100%', height: HEIGHT * 0.1}}
+          resizeMode="contain"
+        />
+        <Text
+          style={{
+            fontWeight: 'bold',
+            fontSize: 19,
+            color:
+              item.CatagoryName === currentCat.CatagoryName
+                ? 'white'
+                : colors.primary,
+          }}>
+          {item.CatagoryName}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  MtHome_CE21: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  MtHome_CE20: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 5,
-    width: '100%',
-  },
-  MtHome_CE19: {
-    fontSize: 19,
-    color: colors.primary,
-    fontWeight: 'bold',
-    width: '100%',
-    textShadowColor: '#bcbcbc',
-    textShadowOffset: {width: 2, height: 2},
-    textShadowRadius: 2,
-  },
-  MtHome_CE18: {
-    width: H_W.width * 0.28,
-    alignSelf: 'flex-end',
-    marginTop: -10,
-    marginRight: -10,
-  },
-  MtHome_CE17: {
-    backgroundColor: `rgba(${colors.rgb_Primary},0.3)`,
-    paddingLeft: H_W.width * 0.06,
-
-    width: H_W.width * 0.5,
-    borderRadius: 50,
-  },
-  MtHome_CE16: {
-    borderRadius: 50,
-    backgroundColor: 'white',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-  },
+  MtHome_CE21: {},
+  MtHome_CE20: {},
+  MtHome_CE19: {},
+  MtHome_CE18: {},
+  MtHome_CE17: {},
+  MtHome_CE16: {},
   MtHome_CE15: {},
-  MtHome_CE14: {
-    width: H_W.width * 0.4,
-
-    position: 'absolute',
-    right: 0,
-  },
-  MtHome_CE13: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-  },
-  MtHome_CE12: {
-    color: colors.primary,
-    textShadowColor: '#bcbcbc',
-    textShadowOffset: {width: 2, height: 2},
-    textShadowRadius: 2,
-  },
-  MtHome_CE11: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  MtHome_CE10: {
-    borderTopRightRadius: 45,
-    borderTopLeftRadius: 45,
-    backgroundColor: `rgba(${colors.rgb_Primary},1)`,
-    position: 'relative',
-    paddingHorizontal: H_W.width * 0.07,
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: 'black',
-    borderBottomColor: 'transparent',
-  },
-  MtHome_CE9: {
-    color: colors.lightGrey3,
-    fontSize: 15,
-    fontWeight: 'bold',
-    borderBottomColor: colors.lightGrey3,
-    borderBottomWidth: 2,
-  },
-  MtHome_CE8: {
-    fontWeight: '500',
-    fontSize: 27,
-  },
-  MtHome_CE7: {
-    borderTopRightRadius: 50,
-    borderBottomRightRadius: 50,
-    paddingLeft: H_W.width * 0.065,
-    paddingRight: H_W.width * 0.02,
-    elevation: 2,
-    backgroundColor: colors.primary,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-  },
-  MtHome_CE6: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingRight: H_W.width * 0.065,
-  },
-  MtHome_CE5: {
-    color: colors.lightGrey3,
-    fontSize: 15,
-    fontWeight: 'bold',
-    borderBottomColor: colors.lightGrey3,
-    borderBottomWidth: 2,
-  },
-  MtHome_CE4: {
-    fontWeight: '500',
-    fontSize: 27,
-  },
-  MtHome_CE3: {
-    borderTopRightRadius: 50,
-    borderBottomRightRadius: 50,
-    paddingLeft: H_W.width * 0.065,
-    paddingRight: H_W.width * 0.02,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    backgroundColor: colors.primary,
-  },
-  MtHome_CE2: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingRight: H_W.width * 0.065,
-  },
-  MtHome_CE1: {
-    textShadowColor: '#bcbcbc',
-    textShadowOffset: {width: 2, height: 2},
-    textShadowRadius: 2,
-  },
+  MtHome_CE14: {},
+  MtHome_CE13: {},
+  MtHome_CE12: {},
+  MtHome_CE11: {},
+  MtHome_CE10: {},
+  MtHome_CE9: {},
+  MtHome_CE8: {},
+  MtHome_CE7: {},
+  MtHome_CE6: {},
+  MtHome_CE5: {},
+  MtHome_CE4: {},
+  MtHome_CE3: {},
+  MtHome_CE2: {},
+  MtHome_CE1: {},
 });
 
 const mapStateToProps = (state) => {

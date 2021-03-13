@@ -4,21 +4,77 @@ export default {
       id: '1',
       CatagoryName: 'Burger',
       icon: require('./MtAssets/burger.png'),
+      iconw: require('./MtAssets/burgerw.png'),
     },
     {
       id: '2',
       CatagoryName: 'Pizza',
       icon: require('./MtAssets/pizza.png'),
+      iconw: require('./MtAssets/pizzaw.png'),
     },
     {
       id: '3',
-      CatagoryName: 'paasta',
+      CatagoryName: 'pasta',
       icon: require('./MtAssets/paasta.png'),
+      iconw: require('./MtAssets/paastaw.png'),
     },
     {
       id: '4',
       CatagoryName: 'fast food',
       icon: require('./MtAssets/fast_food.png'),
+      iconw: require('./MtAssets/fast_foodw.png'),
+    },
+  ],
+  popular: [
+    {
+      id: '2',
+      catagoryId: '1',
+      catagoryName: 'Burger',
+      productName: 'Nuker - Chicken',
+      price: '$3.21',
+      images: require('./MtAssets/product2.png'),
+      discription:
+        "Crispy chicken, fried cheese & fries - The Perfect Combo! Crispy fried chicken with fried cheesy, fries and Lab's special animalsauce in soft-n-fresh 'Potato Bun' to pack the most flavour into each bite.",
+    },
+    {
+      id: '9',
+      catagoryId: '2',
+      catagoryName: 'Pizza',
+      productName: 'BBQ Chicken pizza',
+      price: '$20.65',
+      images: require('./MtAssets/product9.png'),
+      discription:
+        'Place pizza crust on a medium baking sheet. Spread the crust with barbeque sauce. Top with chicken, cilantro, pepperoncini peppers, onion, and cheese. Step 3.',
+    },
+    {
+      id: '14',
+      catagoryId: '3',
+      catagoryName: 'Pizza',
+      productName: 'Brooklyn pizza',
+      price: '$13.90',
+      images: require('./MtAssets/product14.png'),
+      discription:
+        'About Us We only use the highest quality ingredients. The result is a taste you can swear by.Brooklyn Pizza Co. is a new pizza restaurant located in the heart of…',
+    },
+    {
+      id: '17',
+      catagoryId: '4',
+      catagoryName: 'Paasta',
+      productName: 'Spaghetti Bolognese',
+      price: '$10.25',
+      images: require('./MtAssets/product17.png'),
+      discription:
+        'Bolognese sauce is a meat-based sauce in Italian cuisine, typical of the city of Bologna. It is customarily used to dress tagliatelle al ragù and to prepare lasagne alla bolognese.',
+    },
+    {
+      id: '21',
+      catagoryId: '5',
+      catagoryName: 'Fast food',
+      productName: 'Sandwich.',
+      price: '$2.22',
+      images: require('./MtAssets/product21.png'),
+      discription:
+        'A sandwich is a food typically consisting of vegetables, sliced cheese or meat, placed on or between slices of bread, or more generally any dish wherein bread.',
     },
   ],
   products: [
@@ -192,26 +248,26 @@ export default {
       discription:
         'Bolognese sauce is a meat-based sauce in Italian cuisine, typical of the city of Bologna. It is customarily used to dress tagliatelle al ragù and to prepare lasagne alla bolognese.',
     },
-    {
-      id: '18',
-      catagoryId: '4',
-      catagoryName: 'Paasta',
-      productName: 'Tortellini Di Asparagi Freschi',
-      price: '$12.30',
-      images: require('./MtAssets/product18.png'),
-      discription:
-        'This is a list of Italian dishes and foods. Italian cuisine has developed through centuries of ... Ai frutti di mare – an Italian seafood pizza that may be served with scampi, ... Tagliatelle al sugo di lepre, Tagliatelle al ragù; Tortelloni alla zucca; Tortellini,',
-    },
-    {
-      id: '19',
-      catagoryId: '4',
-      catagoryName: 'Paasta',
-      productName: 'Penne Con Pomodoro',
-      price: '$8.25',
-      images: require('./MtAssets/product19.png'),
-      discription:
-        "Penne al Pomodoro is a simple fresh tomato sauce with pasta that is made by blanching the tomatoes, peeling them, and then cooking them with fresh basil, olive oil, and salt. It's a great way to use summer tomatoes for a light and flavorful dish.",
-    },
+    // {
+    //   id: '18',
+    //   catagoryId: '4',
+    //   catagoryName: 'Paasta',
+    //   productName: 'Tortellini Di Asparagi Freschi',
+    //   price: '$12.30',
+    //   images: require('./MtAssets/product18.png'),
+    //   discription:
+    //     'This is a list of Italian dishes and foods. Italian cuisine has developed through centuries of ... Ai frutti di mare – an Italian seafood pizza that may be served with scampi, ... Tagliatelle al sugo di lepre, Tagliatelle al ragù; Tortelloni alla zucca; Tortellini,',
+    // },
+    // {
+    //   id: '19',
+    //   catagoryId: '4',
+    //   catagoryName: 'Paasta',
+    //   productName: 'Penne Con Pomodoro',
+    //   price: '$8.25',
+    //   images: require('./MtAssets/product19.png'),
+    //   discription:
+    //     "Penne al Pomodoro is a simple fresh tomato sauce with pasta that is made by blanching the tomatoes, peeling them, and then cooking them with fresh basil, olive oil, and salt. It's a great way to use summer tomatoes for a light and flavorful dish.",
+    // },
     {
       id: '20',
       catagoryId: '4',
@@ -567,7 +623,7 @@ export default {
     {
       'Product id': '14',
       Name: 'sausage',
-      Images: require('./MtAssets/sausage.png'),
+      Images: require('./MtAssets/sausages.png'),
     },
     {
       'Product id': '14',
@@ -597,7 +653,7 @@ export default {
     {
       'Product id': '15',
       Name: 'sausage',
-      Images: require('./MtAssets/sausage.png'),
+      Images: require('./MtAssets/sausages.png'),
     },
     {
       'Product id': '16',
@@ -759,11 +815,11 @@ export default {
       Name: 'olive oil',
       Images: require('./MtAssets/olive_oil.png'),
     },
-    {
-      'Product id': '23',
-      Name: 'paprika',
-      Images: require('./MtAssets/paprika.png'),
-    },
+    // {
+    //   'Product id': '23',
+    //   Name: 'paprika',
+    //   Images: require('./MtAssets/paprika.png'),
+    // },
     {
       'Product id': '23',
       Name: 'cheese',
