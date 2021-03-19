@@ -25,6 +25,8 @@ import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MyHeader from '../MtComp/MtHeader';
 import {Button} from 'react-native-elements';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+// import Feather from 'react-native-vector-icons/Feather';
 
 function MtHome(props) {
   useEffect(() => {
@@ -47,13 +49,46 @@ function MtHome(props) {
 
   // const MtGotoCart = () => RefNavigation.NavigateAndReset('MtCart');
   // const MtGotoSearch = () => RefNavigation.Navigate('MtSearch');
-  // const MtGoToSingleProduct = (item) => {
-  //   props.MtsetCurrentProductAction(item);
-  //   RefNavigation.NavigateAndReset('MtSP');
-  // };
+  const MtGoToSingleProduct = (item) => {
+    props.MtsetCurrentProductAction(item);
+    RefNavigation.Navigate('MtSP');
+  };
   return (
     <WrapperScreen style={{backgroundColor: 'white'}}>
       <ScrollView>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            height: H_W.width * 0.2,
+            marginTop: H_W.width * 0.05,
+            // backgroundColor: 'pink',
+          }}>
+          <Text
+            style={{
+              fontWeight: '800',
+              fontSize: 40,
+              color: colors.primary,
+              alignSelf: 'flex-start',
+              marginLeft: H_W.width * 0.03,
+            }}>
+            Our Menu
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginRight: H_W.width * 0.03,
+              marginTop: H_W.width * 0.03,
+            }}>
+            <AntDesign name="search1" size={28} color={colors.primary} />
+            <Feather
+              name="bookmark"
+              size={28}
+              color={colors.primary}
+              style={{marginLeft: H_W.width * 0.03}}
+            />
+          </View>
+        </View>
         <View>
           <Loop
             data={categories}
@@ -70,7 +105,7 @@ function MtHome(props) {
           <View
             style={{
               height: H_W.width * 0.6,
-              width: H_W.width * 0.16,
+              width: H_W.width * 0.15,
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'flex-start',
@@ -81,19 +116,21 @@ function MtHome(props) {
             <View
               style={{
                 transform: [{rotate: '270deg'}],
-                alignSelf: 'stretch',
-                width: H_W.width * 0.52,
-                // height: HEIGHT * 0.25,
+                // alignSelf: 'stretch',
+                width: H_W.width * 0.2,
+                marginLeft: -H_W.width * 0.03,
+                // height: HEIGHT * 0.4,
               }}>
               <Text
                 style={{
                   fontSize: 24,
                   fontWeight: 'bold',
-                  height: H_W.width * 0.2,
+                  // height: H_W.width * 0.2,
                   textAlign: 'center',
                   textAlignVertical: 'center',
                   color: 'white',
                   // width: H_W.width * 0.25,
+                  textTransform: 'capitalize',
                 }}>
                 {currentCat.CatagoryName}
               </Text>
@@ -101,7 +138,52 @@ function MtHome(props) {
           </View>
           <Loop
             data={tabProducts}
-            renderItem={({item}) => <ProductList item={item} />}
+            renderItem={({item}) => (
+              <ProductList navigatetoSP={MtGoToSingleProduct} item={item} />
+            )}
+          />
+        </View>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View
+            style={{
+              height: H_W.width * 0.6,
+              width: H_W.width * 0.15,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              borderTopRightRadius: 15,
+              borderBottomRightRadius: 15,
+              backgroundColor: colors.primary,
+            }}>
+            <View
+              style={{
+                transform: [{rotate: '270deg'}],
+                // alignSelf: 'stretch',
+                width: H_W.width * 0.2,
+                height: H_W.width * 0.1,
+                marginLeft: -H_W.width * 0.0,
+                // height: HEIGHT * 0.4,
+              }}>
+              <Text
+                style={{
+                  fontSize: 24,
+                  fontWeight: 'bold',
+                  // height: H_W.width * 0.2,
+                  textAlign: 'center',
+                  textAlignVertical: 'center',
+                  color: 'white',
+                  // width: H_W.width * 0.25,
+                  textTransform: 'capitalize',
+                }}>
+                Popular
+              </Text>
+            </View>
+          </View>
+          <Loop
+            data={Data.popular}
+            renderItem={({item}) => (
+              <ProductList navigatetoSP={MtGoToSingleProduct} item={item} />
+            )}
           />
         </View>
       </ScrollView>
@@ -109,14 +191,22 @@ function MtHome(props) {
   );
 }
 
-export const ProductList = ({item}) => {
+export const ProductList = ({item, navigatetoSP}) => {
   const insets = useSafeAreaInsets();
   const HEIGHT = H_W.height - (insets.bottom + insets.top);
   return (
     <TouchableOpacity
+      onPress={() => navigatetoSP(item)}
       style={{
         backgroundColor: 'white',
         elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
         borderRadius: 20,
         marginHorizontal: H_W.width * 0.03,
       }}>
@@ -132,6 +222,7 @@ export const ProductList = ({item}) => {
         }}>
         <ImageBackground
           source={item.images}
+          //imageStyle={{}}
           style={{width: '100%', height: HEIGHT * 0.3}}
           resizeMode="contain"
         />
@@ -182,6 +273,13 @@ export const TabList = ({item, changeTab, currentCat}) => {
       style={{
         backgroundColor: 'white',
         elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
         borderRadius: 20,
         marginHorizontal: H_W.width * 0.03,
       }}
