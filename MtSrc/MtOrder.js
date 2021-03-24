@@ -6,12 +6,14 @@ import {
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {
   MtremoveFavAction,
   MtsetFavAction,
   MtaddCartAction,
   MtremoveCartAction,
+  MtsetCurrentProductAction,
 } from '../MtRedux/MtActions';
 import Data from '../MTData';
 import Loop from '../MtComp/MtFlatList';
@@ -31,6 +33,7 @@ function MtOrder(props) {
   const MtProduct = props.MtProduct;
   const [ItemCart, setItemCart] = useState(1);
   const [extraItems, setextraItems] = useState([]);
+  const [extraItemsAdded, setExtraItemsAdded] = useState([]);
   useEffect(() => {
     additionalFilterItems();
   }, []);
@@ -41,15 +44,48 @@ function MtOrder(props) {
     );
     setextraItems(filteredData);
   };
+  const toggleExtraItems = (item) => {
+    let copy = [...extraItemsAdded];
+    let isAdded = true;
+    for (let Mt = 0; Mt < copy.length; Mt++) {
+      const element = copy[Mt];
+      if (element === item) {
+        copy[Mt] = '';
+        isAdded = false;
+        break;
+      }
+    }
+    isAdded && copy.push(item);
+    setExtraItemsAdded(copy);
+  };
 
-  const MtGoBack = () => NavigationRef.GoBack();
+  const MtGoBack = () => {
+    props.MtsetCurrentProductAction({
+      ...MtProduct,
+      added: 0,
+      extras: [],
+    });
+    NavigationRef.GoBack();
+  };
+
+  const MtGoContact = () => {
+    props.MtsetCurrentProductAction({
+      ...MtProduct,
+      added: ItemCart,
+      extras: extraItemsAdded,
+    });
+    NavigationRef.Navigate('MtContact');
+  };
 
   const addItem = () => {
     var addItemProduct = ItemCart + 1;
     setItemCart(addItemProduct);
   };
+
   const subtractItem = () => {
-    if (ItemCart == 1) return;
+    if (ItemCart === 1) {
+      return;
+    }
 
     var minusItemProduct = ItemCart - 1;
     setItemCart(minusItemProduct);
@@ -57,15 +93,7 @@ function MtOrder(props) {
   return (
     <WrapperScreen>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <View
-          style={
-            {
-              // marginVertical: HEIGHT * 0.01,
-              // marginHorizontal: H_W.width * 0.02,
-              // paddingHorizontal: H_W.width * 0.03,
-              // paddingVertical: HEIGHT * 0.015,
-            }
-          }>
+        <View>
           <Text
             style={{
               marginHorizontal: H_W.width * 0.06,
@@ -163,12 +191,20 @@ function MtOrder(props) {
           ADD :{' '}
         </Text>
       </View>
-      <Loop
-        data={extraItems}
-        renderItem={({item}) => <FilterDataLoop item={item} />}
-      />
+      <ScrollView>
+        <Loop
+          data={extraItems}
+          renderItem={({item}) => (
+            <FilterDataLoop
+              item={item}
+              toggleExtraItems={toggleExtraItems}
+              extraItemsAdded={extraItemsAdded}
+            />
+          )}
+        />
+      </ScrollView>
       <TouchableOpacity
-        // onPress={OrderScreen}
+        onPress={MtGoContact}
         style={{
           ...border,
           borderRadius: 6,
@@ -188,7 +224,7 @@ function MtOrder(props) {
             fontSize: 18,
             marginLeft: H_W.width * 0.1,
           }}>
-          MAKE ORDER
+          CHECKOUT
         </Text>
         <Text
           style={{
@@ -199,13 +235,9 @@ function MtOrder(props) {
             fontSize: 18,
             marginRight: H_W.width * 0.1,
           }}>
-          {props.MtProduct.price}
+          ${parseFloat(props.MtProduct.price) * ItemCart}
         </Text>
       </TouchableOpacity>
-
-      {/* {extraItems.map((item) => (
-        <FilterDataLoop item={item} />
-      ))} */}
     </WrapperScreen>
   );
 }
@@ -215,15 +247,31 @@ const border = {
 };
 
 export const FilterDataLoop = (props) => {
+  useEffect(() => {
+    checkIfAdded();
+  }, []);
+  const [isAdded, setIsAdded] = useState(false);
   const insets = useSafeAreaInsets();
   const HEIGHT = H_W.height - (insets.bottom + insets.top);
+  const checkIfAdded = () => {
+    for (let i = 0; i < props.extraItemsAdded.length; i++) {
+      const element = props.extraItemsAdded[i];
+      if (element === props.item.Name) {
+        setIsAdded(true);
+        break;
+      }
+    }
+  };
+
   //   console.log(item);
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => props.toggleExtraItems(props.item.Name)}
       style={{
         //...border,
         borderRadius: 6,
-        backgroundColor: 'white',
+        backgroundColor: isAdded ? colors.primary : 'white',
+        // backgroundColor: colors.primary,
         shadowColor: '#000',
         shadowOffset: {
           width: 0,
@@ -238,19 +286,19 @@ export const FilterDataLoop = (props) => {
       <ImageBackground
         source={props.item.Images}
         //imageStyle={{}}
-        style={{width: '100%', height: HEIGHT * 0.09}}
+        style={{width: '100%', height: HEIGHT * 0.08}}
         resizeMode="contain"
       />
       <Text
         style={{
-          color: colors.primary,
+          color: !isAdded ? colors.primary : 'white',
           fontWeight: 'bold',
           fontSize: 18,
           textTransform: 'capitalize',
         }}>
         {props.item.Name}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -267,4 +315,5 @@ export default connect(mapStateToProps, {
   MtremoveFavAction,
   MtremoveCartAction,
   MtaddCartAction,
+  MtsetCurrentProductAction,
 })(React.memo(MtOrder));

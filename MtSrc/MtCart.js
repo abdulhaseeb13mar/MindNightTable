@@ -94,15 +94,6 @@ export const Cart = (props) => {
               containerStyle={{marginTop: 8, width: '40%'}}
             />
           </View>
-          <ImageBackground
-            source={require('../MtAssets/ice22.png')}
-            style={{
-              ...styles.cart_CE8,
-              height: HEIGHT * 0.3,
-              top: -HEIGHT * 0.05,
-            }}
-            resizeMode="contain"
-          />
         </View>
       </View>
     </WrapperScreen>

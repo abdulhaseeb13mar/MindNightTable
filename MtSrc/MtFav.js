@@ -12,14 +12,16 @@ import UseHeader from '../MtComp/MtHeader';
 import WrapperScreen from '../MtComp/WrapperScreen';
 import NavigationRef from '../MtComp/RefNavigation';
 import Loop from '../MtComp/MtFlatList';
-import {FruityTiles} from './MtHome';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ProductList} from './MtHome';
 import {H_W} from '../MtComp/MtDim';
 const MtFavourites = (props) => {
   const MtGoToSingleProduct = (item) => {
     props.MtsetCurrentProductAction(item);
-    NavigationRef.Navigate('MtSingleProduct');
+    NavigationRef.Navigate('MtSP');
   };
-
+  const insets = useSafeAreaInsets();
+  const HEIGHT = H_W.height - (insets.bottom + insets.top);
   const MtGoBack = () => NavigationRef.Navigate('MtHome');
 
   return (
@@ -35,26 +37,34 @@ const MtFavourites = (props) => {
           textAlign: 'center',
           fontSize: H_W.width * 0.05,
           fontWeight: 'bold',
-          marginTop: H_W.height * 0.08,
+          // marginTop: H_W.height * 0.08,
         }}>
         You have {props.MtFavs.length} Favourite items
       </Text>
-      <ScrollView bounces={false}>
-        <View style={styles.fav_SL1}>
-          <Loop
-            data={props.MtFavs}
-            renderItem={({item}) => (
-              <FruityTiles
+      {/* <ScrollView bounces={false}> */}
+      <View style={styles.fav_SL1}>
+        <Loop
+          horizontal={false}
+          data={props.MtFavs}
+          renderItem={({item}) => (
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginVertical: HEIGHT * 0.015,
+              }}>
+              <ProductList
                 item={item}
-                MtGoToSingleProduct={MtGoToSingleProduct}
+                navigatetoSP={MtGoToSingleProduct}
                 MtFavs={props.MtFavs}
                 MtRemoveFavAct={(i) => props.MtremoveFavAction(i)}
                 MtSetFavAct={(i) => props.MtsetFavAction(i)}
               />
-            )}
-          />
-        </View>
-      </ScrollView>
+            </View>
+          )}
+        />
+      </View>
+      {/* </ScrollView> */}
     </WrapperScreen>
   );
 };

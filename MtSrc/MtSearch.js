@@ -7,18 +7,25 @@ import NavigationRef from '../MtComp/RefNavigation';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import SearchBar from '../MtComp/MtSearchBar';
-import Data from '../MtData';
-import {HorizontalList} from './MtHome';
+import Data from '../MTData';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ProductList} from './MtHome';
 import {connect} from 'react-redux';
-import {MtsetCurrentProductAction} from '../MtRedux/MtActions';
+import {
+  MtsetCurrentProductAction,
+  MtremoveFavAction,
+  MtsetFavAction,
+} from '../MtRedux/MtActions';
+import Loop from '../MtComp/MtFlatList';
 import UseHeader from '../MtComp/MtHeader';
 
 function Search(props) {
   const [searchText, setSearchText] = useState('');
-
+  const insets = useSafeAreaInsets();
+  const HEIGHT = H_W.height - (insets.bottom + insets.top);
   const RenderSearchedResult = () => {
-    var SearchedItems = Data.product.filter((item) =>
-      item.names.toLowerCase().includes(searchText.toLowerCase()),
+    var SearchedItems = Data.products.filter((item) =>
+      item.productName.toLowerCase().includes(searchText.toLowerCase()),
     );
     return SearchedItems.length === 0 ? (
       <Text style={{fontWeight: 'bold', textAlign: 'center'}}>
@@ -35,13 +42,28 @@ function Search(props) {
   };
 
   const CardRender = (Arr) => {
-    return Arr.map((item, index) => (
-      <View
-        key={index}
-        style={{width: '100%', alignItems: 'center', justifyContent: 'center'}}>
-        <HorizontalList item={item} MtGoToSingleProduct={MtGoToSingleProduct} />
-      </View>
-    ));
+    return (
+      <Loop
+        horizontal={false}
+        data={Arr}
+        renderItem={({item}) => (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginVertical: HEIGHT * 0.015,
+            }}>
+            <ProductList
+              item={item}
+              navigatetoSP={MtGoToSingleProduct}
+              MtFavs={props.MtFavs}
+              MtRemoveFavAct={(i) => props.MtremoveFavAction(i)}
+              MtSetFavAct={(i) => props.MtsetFavAction(i)}
+            />
+          </View>
+        )}
+      />
+    );
   };
   const MtGoBack = () => NavigationRef.GoBack();
 
@@ -51,7 +73,7 @@ function Search(props) {
       <UseHeader
         leftIcon={Entypo}
         leftIconName="chevron-left"
-        Title="All Ice Creams"
+        Title="Search"
         leftIconAction={MtGoBack}
         titleStyle={styles.TextShadow}
         leftIconStyle={styles.TextShadow}
@@ -59,13 +81,9 @@ function Search(props) {
       <View style={styles.SearchBarWrapper}>
         <SearchBar changeSearchText={changeSearchText} />
       </View>
-      <KeyboardAwareScrollView style={styles.container}>
-        <View style={{marginTop: H_W.height * 0.03}}>
-          {searchText !== ''
-            ? RenderSearchedResult()
-            : CardRender(Data.product)}
-        </View>
-      </KeyboardAwareScrollView>
+      <View style={{marginTop: H_W.height * 0.03, flex: 1}}>
+        {searchText !== '' ? RenderSearchedResult() : CardRender(Data.products)}
+      </View>
     </WrapperScreen>
   );
 }
@@ -76,6 +94,8 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   MtsetCurrentProductAction,
+  MtremoveFavAction,
+  MtsetFavAction,
 })(Search);
 
 const styles = StyleSheet.create({

@@ -1,10 +1,17 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {Text, View, StyleSheet, TextInput} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ImageBackground,
+} from 'react-native';
 import {connect} from 'react-redux';
 import WrapperScreen from '../MtComp/WrapperScreen';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {H_W} from '../MtComp/MtDim';
 import {colors} from '../MtComp/MtColor';
 import {Button, Overlay} from 'react-native-elements';
@@ -32,6 +39,7 @@ const ConfirmOrder = (props) => {
   const [phoneErrMsg, setPhoneErrMsg] = useState('');
   const [addressErrMsg, setAddressErrMsg] = useState('');
   const [phone, setPhone] = useState('');
+  const MtProduct = props.MtProduct;
 
   const Confirm = () => {
     const formValidResponse = isFormValid(
@@ -158,17 +166,96 @@ const ConfirmOrder = (props) => {
             textShadowRadius: 2,
           }}
         />
-        <View style={{...styles.MtSummaryOverlay, marginBottom: HEIGHT * 0.02}}>
-          <View style={styles.MtSm1}>
-            <View style={styles.MtSm2}>
-              <Text>Total:</Text>
-              <Text style={{fontWeight: 'bold'}}>${props.total}</Text>
+        <View
+          style={{
+            marginBottom: H_W.height * 0.01,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <TouchableOpacity
+            onPress={goBack}
+            style={{
+              borderColor: colors.primary,
+              borderWidth: 2,
+              display: 'flex',
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              borderRadius: 10,
+              padding: 10,
+              marginVertical: HEIGHT * 0.01,
+              backgroundColor: colors.primary,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 1,
+              },
+              shadowOpacity: 0.2,
+              shadowRadius: 1.41,
+              elevation: 2,
+            }}>
+            <ImageBackground
+              source={MtProduct.images}
+              style={{
+                width: H_W.width * 0.3,
+                height: H_W.width * 0.35,
+              }}
+              imageStyle={{borderRadius: 10}}
+              resizeMode="contain"
+            />
+            <View
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'flex-start',
+                marginLeft: H_W.width * 0.06,
+                position: 'relative',
+              }}>
+              <Text
+                style={{
+                  color: colors.secondary,
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  width: H_W.width * 0.35,
+                }}>
+                {MtProduct.productName}
+              </Text>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginTop: 10,
+                  width: H_W.width * 0.35,
+                }}>
+                <Text
+                  style={{
+                    color: colors.lightGrey3,
+                    fontSize: 15,
+                    fontWeight: '700',
+                  }}>
+                  ${parseFloat(MtProduct.price) * MtProduct.added}
+                </Text>
+              </View>
+              <Text
+                style={{
+                  color: 'white',
+                  fontWeight: 'bold',
+                  marginTop: HEIGHT * 0.01,
+                }}>
+                Extras:{' '}
+              </Text>
+              <Text
+                style={{
+                  color: 'white',
+                  marginTop: HEIGHT * 0.01,
+                }}>
+                {MtProduct.extras.map((item) => `${item} `)}
+              </Text>
             </View>
-            <View style={styles.MtSm3}>
-              <Text style={styles.MtSm4}>Payment Mode:</Text>
-              <Text style={styles.MtSm4}>Payment on delivery</Text>
-            </View>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.MtPersonalInfoWrapper}>
           <Text style={styles.MtPersonalInfoHeader}>Personal Information</Text>
@@ -183,15 +270,15 @@ const ConfirmOrder = (props) => {
               FIRST NAME <Text> {firstNameErrMsg}</Text>
             </Text>
             <View style={styles.MtPersonalInfoInputWrapper}>
-              <TextInput
-                placeholder="First Name"
-                style={{...styles.Input, height: HEIGHT * 0.065}}
-                onChangeText={changeFirstName}
-              />
               <Feather
                 name="user"
                 size={H_W.width * 0.07}
                 style={styles.MtInputIcon}
+              />
+              <TextInput
+                placeholder="First Name"
+                style={{...styles.Input, height: HEIGHT * 0.065}}
+                onChangeText={changeFirstName}
               />
             </View>
           </View>
@@ -204,15 +291,15 @@ const ConfirmOrder = (props) => {
               LAST NAME <Text> {lastNameErrMsg}</Text>
             </Text>
             <View style={styles.MtPersonalInfoInputWrapper}>
-              <TextInput
-                placeholder="Last Name"
-                style={{...styles.Input, height: HEIGHT * 0.065}}
-                onChangeText={changeLastName}
-              />
               <Feather
                 name="user"
                 size={H_W.width * 0.07}
                 style={styles.MtInputIcon}
+              />
+              <TextInput
+                placeholder="Last Name"
+                style={{...styles.Input, height: HEIGHT * 0.065}}
+                onChangeText={changeLastName}
               />
             </View>
           </View>
@@ -225,15 +312,15 @@ const ConfirmOrder = (props) => {
               EMAIL<Text> {emailErrMsg}</Text>
             </Text>
             <View style={styles.MtPersonalInfoInputWrapper}>
-              <TextInput
-                placeholder="Email"
-                style={{...styles.Input, height: HEIGHT * 0.065}}
-                onChangeText={changeEmail}
-              />
               <Feather
                 name="mail"
                 size={H_W.width * 0.07}
                 style={styles.MtInputIcon}
+              />
+              <TextInput
+                placeholder="Email"
+                style={{...styles.Input, height: HEIGHT * 0.065}}
+                onChangeText={changeEmail}
               />
             </View>
           </View>
@@ -294,7 +381,7 @@ const ConfirmOrder = (props) => {
               ...styles.MtConfirmButton,
               padding: HEIGHT * 0.018,
             }}
-            titleStyle={{color: 'black', fontWeight: 'bold'}}
+            titleStyle={{color: 'white', fontWeight: 'bold'}}
             loadingProps={{color: 'black'}}
             loading={loading}
             onPress={Confirm}
@@ -309,14 +396,14 @@ const ConfirmOrder = (props) => {
               ...styles.MtModalWrapper,
               paddingVertical: HEIGHT * 0.04,
             }}>
-            <Ionicons
-              name="ios-ice-cream-sharp"
+            <FontAwesome5
+              name="pizza-slice"
               size={H_W.width * 0.25}
-              color={colors.primary}
+              color="white"
             />
             <Text style={styles.MtModalHeadText}>THANK YOU!</Text>
             <Text style={styles.MtModalSubText}>
-              You will recieve your ice cream shortly!
+              You will recieve your order soon
             </Text>
           </View>
         </Overlay>
@@ -327,6 +414,7 @@ const ConfirmOrder = (props) => {
 
 const mapStateToProps = (state) => {
   return {
+    MtProduct: state.MtCrntPrdtReducer,
     total: state.MtCartReducer.totalAmount,
   };
 };
@@ -368,20 +456,23 @@ const styles = StyleSheet.create({
   },
   MtModalSubText: {
     fontSize: H_W.width * 0.045,
-    color: colors.darkGray,
     fontWeight: 'bold',
+    color: 'white',
     textAlign: 'center',
   },
   MtModalHeadText: {
     fontSize: H_W.width * 0.09,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: 'white',
   },
   MtModalWrapper: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     width: H_W.width * 0.8,
+    backgroundColor: colors.primary,
+    borderRadius: 20,
   },
   MtConfirmButtonContainer: {
     width: '100%',

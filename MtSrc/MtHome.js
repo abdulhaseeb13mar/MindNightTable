@@ -14,6 +14,7 @@ import {H_W} from '../MtComp/MtDim';
 import Data from '../MTData';
 import Loop from '../MtComp/MtFlatList';
 import RefNavigation from '../MtComp/RefNavigation';
+import Entypo from 'react-native-vector-icons/Entypo';
 import {connect} from 'react-redux';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
@@ -26,6 +27,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MyHeader from '../MtComp/MtHeader';
 import {Button} from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MtSearchBar from '../MtComp/MtSearchBar';
 // import Feather from 'react-native-vector-icons/Feather';
 
 function MtHome(props) {
@@ -47,15 +49,16 @@ function MtHome(props) {
     setTabProducts(filteredProducts);
   };
 
-  // const MtGotoCart = () => RefNavigation.NavigateAndReset('MtCart');
-  // const MtGotoSearch = () => RefNavigation.Navigate('MtSearch');
+  const MtGotoCart = () => RefNavigation.NavigateAndReset('MtCart');
+  const MtGotoSearch = () => RefNavigation.Navigate('MtSearch');
+  const MtGotoFav = () => RefNavigation.Navigate('MtFav');
   const MtGoToSingleProduct = (item) => {
     props.MtsetCurrentProductAction(item);
     RefNavigation.Navigate('MtSP');
   };
   return (
     <WrapperScreen style={{backgroundColor: 'white'}}>
-      <ScrollView>
+      <ScrollView bounces={false}>
         <View
           style={{
             flexDirection: 'row',
@@ -80,27 +83,35 @@ function MtHome(props) {
               marginRight: H_W.width * 0.03,
               marginTop: H_W.width * 0.03,
             }}>
-            <AntDesign name="search1" size={28} color={colors.primary} />
-            <Feather
-              name="bookmark"
-              size={28}
-              color={colors.primary}
-              style={{marginLeft: H_W.width * 0.03}}
-            />
+            <TouchableOpacity onPress={MtGotoSearch}>
+              <Feather name="search" size={28} color={colors.primary} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={MtGotoFav}>
+              <Feather
+                name="bookmark"
+                size={28}
+                color={colors.primary}
+                style={{marginLeft: H_W.width * 0.03}}
+              />
+            </TouchableOpacity>
           </View>
         </View>
-        <View>
-          <Loop
-            data={categories}
-            renderItem={({item}) => (
-              <TabList
-                item={item}
-                currentCat={currentCat}
-                changeTab={changeTab}
-              />
-            )}
-          />
-        </View>
+        <TouchableOpacity
+          onPress={MtGotoSearch}
+          style={{alignItems: 'center', justifyContent: 'center'}}>
+          <MtSearchBar editable={false} />
+        </TouchableOpacity>
+        <Loop
+          style={{marginTop: HEIGHT * 0.015}}
+          data={categories}
+          renderItem={({item}) => (
+            <TabList
+              item={item}
+              currentCat={currentCat}
+              changeTab={changeTab}
+            />
+          )}
+        />
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View
             style={{
@@ -139,7 +150,13 @@ function MtHome(props) {
           <Loop
             data={tabProducts}
             renderItem={({item}) => (
-              <ProductList navigatetoSP={MtGoToSingleProduct} item={item} />
+              <ProductList
+                navigatetoSP={MtGoToSingleProduct}
+                item={item}
+                MtFavs={props.MtFavs}
+                MtRemoveFavAct={(i) => props.MtremoveFavAction(i)}
+                MtSetFavAct={(i) => props.MtsetFavAction(i)}
+              />
             )}
           />
         </View>
@@ -159,9 +176,10 @@ function MtHome(props) {
               style={{
                 transform: [{rotate: '270deg'}],
                 // alignSelf: 'stretch',
-                width: H_W.width * 0.2,
-                height: H_W.width * 0.1,
+                width: H_W.width * 0.24,
+                height: H_W.width * 0.17,
                 marginLeft: -H_W.width * 0.0,
+                overflow: 'visible',
                 // height: HEIGHT * 0.4,
               }}>
               <Text
@@ -182,7 +200,13 @@ function MtHome(props) {
           <Loop
             data={Data.popular}
             renderItem={({item}) => (
-              <ProductList navigatetoSP={MtGoToSingleProduct} item={item} />
+              <ProductList
+                navigatetoSP={MtGoToSingleProduct}
+                item={item}
+                MtFavs={props.MtFavs}
+                MtRemoveFavAct={(i) => props.MtremoveFavAction(i)}
+                MtSetFavAct={(i) => props.MtsetFavAction(i)}
+              />
             )}
           />
         </View>
@@ -191,7 +215,30 @@ function MtHome(props) {
   );
 }
 
-export const ProductList = ({item, navigatetoSP}) => {
+export const ProductList = ({
+  item,
+  navigatetoSP,
+  MtFavs,
+  MtRemoveFavAct,
+  MtSetFavAct,
+}) => {
+  useEffect(() => {
+    checkIfFav();
+  }, []);
+  const [fav, setFav] = useState(false);
+  const checkIfFav = () => {
+    for (let us = 0; us < MtFavs.length; us++) {
+      if (MtFavs[us].id === item.id) {
+        setFav(true);
+        break;
+      }
+    }
+  };
+
+  const toggleFav = () => {
+    fav ? MtRemoveFavAct(item.id) : MtSetFavAct(item);
+    setFav(!fav);
+  };
   const insets = useSafeAreaInsets();
   const HEIGHT = H_W.height - (insets.bottom + insets.top);
   return (
@@ -212,7 +259,6 @@ export const ProductList = ({item, navigatetoSP}) => {
       }}>
       <View
         style={{
-          flex: 1,
           width: H_W.width * 0.6,
           backgroundColor: 'white',
           padding: H_W.width * 0.03,
@@ -224,8 +270,16 @@ export const ProductList = ({item, navigatetoSP}) => {
           source={item.images}
           //imageStyle={{}}
           style={{width: '100%', height: HEIGHT * 0.3}}
-          resizeMode="contain"
-        />
+          resizeMode="contain">
+          <TouchableOpacity onPress={toggleFav}>
+            <AntDesign
+              name={fav ? 'heart' : 'hearto'}
+              size={26}
+              color={colors.primary}
+              style={{alignSelf: 'flex-end'}}
+            />
+          </TouchableOpacity>
+        </ImageBackground>
         <Text
           style={{
             fontWeight: 'bold',
@@ -322,6 +376,11 @@ export const TabList = ({item, changeTab, currentCat}) => {
   );
 };
 
+const border = {
+  borderWidth: 1,
+  borderColor: 'red',
+};
+
 const styles = StyleSheet.create({
   MtHome_CE21: {},
   MtHome_CE20: {},
@@ -348,6 +407,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
+    MtFavs: state.MtToggleFav,
     MtTotal: state.MtCartReducer.totalAmount,
   };
 };
