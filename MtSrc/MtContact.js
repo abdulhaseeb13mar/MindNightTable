@@ -33,8 +33,6 @@ const ConfirmOrder = (props) => {
   const [address, setAddress] = useState('');
   const [firstName, setFirstName] = useState('');
   const [emailErrMsg, setEmailErrMsg] = useState('');
-  const [lastNameErrMsg, setLastNameErrMsg] = useState('');
-  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneErrMsg, setPhoneErrMsg] = useState('');
   const [addressErrMsg, setAddressErrMsg] = useState('');
@@ -42,13 +40,7 @@ const ConfirmOrder = (props) => {
   const MtProduct = props.MtProduct;
 
   const Confirm = () => {
-    const formValidResponse = isFormValid(
-      firstName,
-      lastName,
-      email,
-      phone,
-      address,
-    );
+    const formValidResponse = isFormValid(firstName, email, phone, address);
     if (!formValidResponse.status) {
       errorMsgHandler(formValidResponse.errCategory, formValidResponse.errMsg);
     } else {
@@ -58,7 +50,6 @@ const ConfirmOrder = (props) => {
         firstName: firstName,
         phone: phone,
         address: address,
-        lastName: lastName,
       });
     }
   };
@@ -86,9 +77,8 @@ const ConfirmOrder = (props) => {
             firstname: firstName,
             address: address,
             phonenumber: phone,
-            lastname: lastName,
             email: email,
-            appname: 'Creamery Express',
+            appname: 'MindNight Table',
           }),
         },
       );
@@ -103,33 +93,23 @@ const ConfirmOrder = (props) => {
   const errorMsgHandler = (errCategory, errMsg) => {
     if (errCategory === 'email') {
       setEmailErrMsg(errMsg);
-      setLastNameErrMsg('');
-      setPhoneErrMsg('');
       setFirstNameErrMsg('');
+      setPhoneErrMsg('');
       setAddressErrMsg('');
     } else if (errCategory === 'firstname') {
-      setLastNameErrMsg('');
       setEmailErrMsg('');
+      setAddressErrMsg('');
       setFirstNameErrMsg(errMsg);
       setPhoneErrMsg('');
-      setAddressErrMsg('');
-    } else if (errCategory === 'lastname') {
-      setLastNameErrMsg(errMsg);
-      setEmailErrMsg('');
-      setPhoneErrMsg('');
-      setFirstNameErrMsg('');
-      setAddressErrMsg('');
     } else if (errCategory === 'phone') {
-      setPhoneErrMsg(errMsg);
-      setEmailErrMsg('');
-      setLastNameErrMsg('');
-      setFirstNameErrMsg('');
       setAddressErrMsg('');
+      setEmailErrMsg('');
+      setPhoneErrMsg(errMsg);
+      setFirstNameErrMsg('');
     } else if (errCategory === 'address') {
-      setAddressErrMsg(errMsg);
-      setLastNameErrMsg('');
       setPhoneErrMsg('');
       setFirstNameErrMsg('');
+      setAddressErrMsg(errMsg);
       setEmailErrMsg('');
     }
   };
@@ -142,7 +122,6 @@ const ConfirmOrder = (props) => {
 
   const changePhone = (t) => setPhone(t);
   const changeAddress = (t) => setAddress(t);
-  const changeLastName = (t) => setLastName(t);
   const changeEmail = (t) => setEmail(t);
   const goBack = () => NavPointer.GoBack();
   const changeFirstName = (t) => setFirstName(t);
@@ -267,7 +246,7 @@ const ConfirmOrder = (props) => {
                 ...styles.MtPersonalInfoHeadingName,
                 color: firstNameErrMsg ? 'red' : 'black',
               }}>
-              FIRST NAME <Text> {firstNameErrMsg}</Text>
+              NAME <Text> {firstNameErrMsg}</Text>
             </Text>
             <View style={styles.MtPersonalInfoInputWrapper}>
               <Feather
@@ -276,30 +255,9 @@ const ConfirmOrder = (props) => {
                 style={styles.MtInputIcon}
               />
               <TextInput
-                placeholder="First Name"
+                placeholder="Your Name"
                 style={{...styles.Input, height: HEIGHT * 0.065}}
                 onChangeText={changeFirstName}
-              />
-            </View>
-          </View>
-          <View style={styles.MtSinglePersonalInfoWrapper}>
-            <Text
-              style={{
-                ...styles.MtPersonalInfoHeadingName,
-                color: lastNameErrMsg ? 'red' : 'black',
-              }}>
-              LAST NAME <Text> {lastNameErrMsg}</Text>
-            </Text>
-            <View style={styles.MtPersonalInfoInputWrapper}>
-              <Feather
-                name="user"
-                size={H_W.width * 0.07}
-                style={styles.MtInputIcon}
-              />
-              <TextInput
-                placeholder="Last Name"
-                style={{...styles.Input, height: HEIGHT * 0.065}}
-                onChangeText={changeLastName}
               />
             </View>
           </View>
@@ -333,16 +291,16 @@ const ConfirmOrder = (props) => {
               PHONE<Text> {phoneErrMsg}</Text>
             </Text>
             <View style={styles.MtPersonalInfoInputWrapper}>
+              <Feather
+                name="phone"
+                size={H_W.width * 0.07}
+                style={styles.MtInputIcon}
+              />
               <TextInput
                 placeholder="Phone Number"
                 keyboardType="number-pad"
                 style={{...styles.Input, height: HEIGHT * 0.065}}
                 onChangeText={changePhone}
-              />
-              <Feather
-                name="phone"
-                size={H_W.width * 0.07}
-                style={styles.MtInputIcon}
               />
             </View>
           </View>
@@ -355,15 +313,15 @@ const ConfirmOrder = (props) => {
               ADDRESS<Text> {addressErrMsg}</Text>
             </Text>
             <View style={styles.MtPersonalInfoInputWrapper}>
-              <TextInput
-                placeholder="Address"
-                style={{...styles.Input, height: HEIGHT * 0.065}}
-                onChangeText={changeAddress}
-              />
               <Feather
                 name="map-pin"
                 size={H_W.width * 0.07}
                 style={styles.MtInputIcon}
+              />
+              <TextInput
+                placeholder="Address"
+                style={{...styles.Input, height: HEIGHT * 0.065}}
+                onChangeText={changeAddress}
               />
             </View>
           </View>
@@ -516,7 +474,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: H_W.width * 0.02,
     borderRadius: 15,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: colors.primary,
   },
   MtPersonalInfoHeadingName: {
