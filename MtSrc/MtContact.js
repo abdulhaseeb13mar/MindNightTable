@@ -44,7 +44,11 @@ const ConfirmOrder = (props) => {
     if (!formValidResponse.status) {
       errorMsgHandler(formValidResponse.errCategory, formValidResponse.errMsg);
     } else {
-      CallApi();
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        setShowModal(true);
+      }, 2000);
       props.MtUserAction({
         email: email,
         firstName: firstName,
